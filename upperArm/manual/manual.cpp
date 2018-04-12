@@ -20,8 +20,8 @@ int main(int argc, const char *argv[])
 	int speed = 0;
 	char c;
 
-	int threshold_id2 = 2047;
-	int threshold_id3 = 2047;
+	int threshold_id2 = 432;
+	int threshold_id3 = 2216;
 	int threshold_id4 = 2047;
 	int threshold_id5 = 2047;
 	int threshold_id6 = 2047;
@@ -46,7 +46,7 @@ int main(int argc, const char *argv[])
 
 
 		if (cvui::button(frame, 410, 20, "RESET")) {
-			threshold_id2 = 2047;
+			threshold_id2 = 432;
 			threshold_id3 = 2047;
 			threshold_id4 = 2047;
 			threshold_id5 = 2047;
@@ -58,29 +58,29 @@ int main(int argc, const char *argv[])
 		}
 		
 		if (cvui::button(frame, 90, 95, "CW")) {
-
+			control.turn(1, RIGHT, speed);
 		}
 		
 		if (cvui::button(frame, 145, 95, "STOP")) {
-
+			control.turn(1, LEFT, 0);
 		}
 		
 		if (cvui::button(frame, 215, 95, "CCW")) {
-
+			control.turn(1, LEFT, speed);
 		}
 
 		cvui::printf(frame, 280, 100, 0.5, 0xc1c1c1, "Speed: ");
 		
-		
+		cvui::counter(frame, 350, 100, &speed);
 		cvui::counter(frame, 100, 157, &threshold_id2);
 		cvui::counter(frame, 100, 227, &threshold_id3);
 		cvui::counter(frame, 100, 297, &threshold_id4);
 		cvui::counter(frame, 100, 367, &threshold_id5);
 		cvui::counter(frame, 100, 437, &threshold_id6);
 		
-		cvui::trackbar(frame, 330, 80, 160, &speed, 0, 1024);
-		cvui::trackbar(frame, 250, 150, 165, &threshold_id2, 0, 4095);
-		cvui::trackbar(frame, 250, 220, 165, &threshold_id3, 0, 4095);
+		//cvui::trackbar(frame, 330, 80, 160, &speed, 0, 1024);
+		cvui::trackbar(frame, 250, 150, 165, &threshold_id2, 0, 3000);
+		cvui::trackbar(frame, 250, 220, 165, &threshold_id3, 1036, 3553);
 		cvui::trackbar(frame, 250, 290, 165, &threshold_id4, 0, 4095);
 		cvui::trackbar(frame, 250, 360, 165, &threshold_id5, 705, 3185);
 		cvui::trackbar(frame, 250, 430, 165, &threshold_id6, 720, 3209);
@@ -94,11 +94,11 @@ int main(int argc, const char *argv[])
 		cvui::printf(frame, 20, 370, 0.5, 0xc1c1c1, "ID5: ");
 		cvui::printf(frame, 20, 440, 0.5, 0xc1c1c1, "ID6: ");
 
-		control.moveSpeed(2, threshold_id2, 64);
-		control.moveSpeed(3, threshold_id3, 64);
-		control.moveSpeed(4, threshold_id4, 64);
-		control.moveSpeed(5, threshold_id5, 64);
-		control.moveSpeed(6, threshold_id6, 64);
+		control.moveSpeed(2, threshold_id2, 32);
+		control.moveSpeed(3, threshold_id3, 32);
+		control.moveSpeed(4, threshold_id4, 32);
+		control.moveSpeed(5, threshold_id5, 32);
+		control.moveSpeed(6, threshold_id6, 32);
 
 		// Update cvui stuff and show everything on the screen
 		cvui::imshow(WINDOW_NAME, frame);
@@ -107,6 +107,8 @@ int main(int argc, const char *argv[])
 		c = cv::waitKey(33);
 		if( c == 'q' || c == 27) break;
 	}
+
+	control.disconnect();
 
 	return 0;
 }
