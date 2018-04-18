@@ -119,11 +119,10 @@ int main(int argc, const char *argv[])
 		
 		pca9685->setPWM(0,0,threshold_clw);
         pca9685->setPWM(1,0,threshold_clw);
-        /*
+        
         clawCam.read(currentFrame);
 		if(currentFrame.empty()) break;
 		imshow("VID1", currentFrame);
-		*/
 		/*
 		baseCam.read(baseFrame);
 		if(baseFrame.empty()) break;
@@ -197,7 +196,7 @@ void displayGUI(int *threshold_id1, int *threshold_id2, int *threshold_id3,
 	cvui::trackbar(frame, 250, 150, 165, threshold_id2, 0, 3000);
 	cvui::trackbar(frame, 250, 220, 165, threshold_id3, 1000, 2700);
 	cvui::trackbar(frame, 250, 290, 165, threshold_id4, 0, 4095);
-	cvui::trackbar(frame, 250, 360, 165, threshold_id5, 600, 3142);
+	cvui::trackbar(frame, 250, 360, 165, threshold_id5, 650, 3142);
 	cvui::trackbar(frame, 250, 430, 165, threshold_id6, 759, 3140);
 	cvui::trackbar(frame, 250, 500, 165, threshold_clw, 120, 490);
 
