@@ -82,6 +82,9 @@ int UsbMX::reset(unsigned char ID)
     tx_buffer[4] = MX_RESET;
     tx_buffer[5] = Checksum;
     
+    usleep(10000);
+    tcflush(uart0_filestream, TCIOFLUSH);
+    
 	count = write(uart0_filestream, &tx_buffer, 6);
 	if (count < 0)
 	{
@@ -106,6 +109,9 @@ int UsbMX::ping(unsigned char ID)
     tx_buffer[2] = ID;
     tx_buffer[3] = MX_PING;
     tx_buffer[4] = Checksum;
+    
+    usleep(10000);
+    tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 5);
 	if (count < 0)
@@ -134,6 +140,9 @@ int UsbMX::setID(unsigned char ID, unsigned char newID)
     tx_buffer[5] = MX_ID;
     tx_buffer[6] = newID;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+    tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -164,6 +173,9 @@ int UsbMX::setBD(unsigned char ID, long baud)
     tx_buffer[5] = MX_BAUD_RATE;
     tx_buffer[6] = Baud_Rate;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+    tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -197,6 +209,9 @@ int UsbMX::move(unsigned char ID, int Position)
     tx_buffer[6] = Position_L;
     tx_buffer[7] = Position_H;
     tx_buffer[8] = Checksum;
+    
+    usleep(10000);
+    tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 9);
 	if (count < 0)
@@ -234,6 +249,9 @@ int UsbMX::moveSpeed(unsigned char ID, int Position, int Speed)
     tx_buffer[8] = Speed_L;
     tx_buffer[9] = Speed_H;
     tx_buffer[10] = Checksum;
+    
+    usleep(10000);
+    tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 11);
 	if (count < 0)
@@ -274,7 +292,7 @@ int UsbMX::moveSpeedDeg(unsigned char ID, int Degrees, int Speed)
 int UsbMX::setEndless(unsigned char ID,bool Status)
 {
 
-    if ( Status ) {	// for continous mode
+    if ( Status == 1) {	// for continous mode
 	    char MX_CCW_AL_LT = 0;
 	    Checksum = (~(ID + MX_GOAL_LENGTH + MX_WRITE_DATA + MX_CCW_ANGLE_LIMIT_L))&0xFF;
     
@@ -292,6 +310,9 @@ int UsbMX::setEndless(unsigned char ID,bool Status)
         tx_buffer[8] = MX_CCW_AL_LT;
         tx_buffer[9] = MX_CCW_AL_LT;
         tx_buffer[10]= Checksum;
+        
+        usleep(10000);
+        tcflush(uart0_filestream, TCIOFLUSH);
         
 	    count = write(uart0_filestream, &tx_buffer, 11);
 	    if (count < 0)
@@ -312,8 +333,6 @@ int UsbMX::setEndless(unsigned char ID,bool Status)
     
         memset(tx_buffer, 0, sizeof(tx_buffer) );
         
-	    
-
         tx_buffer[0] = MX_START;
         tx_buffer[1] = MX_START;
         tx_buffer[2] = ID;
@@ -323,6 +342,9 @@ int UsbMX::setEndless(unsigned char ID,bool Status)
         tx_buffer[6] = MX_CCW_AL_L;
         tx_buffer[7] = MX_CCW_AL_H;
         tx_buffer[8] = Checksum;
+        
+        usleep(10000);
+        tcflush(uart0_filestream, TCIOFLUSH);
         
 	    count = write(uart0_filestream, &tx_buffer, 9);
 	    if (count < 0)
@@ -335,6 +357,8 @@ int UsbMX::setEndless(unsigned char ID,bool Status)
 
         return 0;
     }
+    
+    return 0;
 }
 
 int UsbMX::turn(unsigned char ID, bool SIDE, int Speed)
@@ -356,6 +380,9 @@ int UsbMX::turn(unsigned char ID, bool SIDE, int Speed)
         tx_buffer[6] = Speed_L;
         tx_buffer[7] = Speed_H;
         tx_buffer[8] = Checksum;
+        
+        usleep(10000);
+		tcflush(uart0_filestream, TCIOFLUSH);
         
 	    count = write(uart0_filestream, &tx_buffer, 9);
 	    if (count < 0)
@@ -385,6 +412,9 @@ int UsbMX::turn(unsigned char ID, bool SIDE, int Speed)
         tx_buffer[6] = Speed_L;
         tx_buffer[7] = Speed_H;
         tx_buffer[8] = Checksum;
+        
+        usleep(10000);
+		tcflush(uart0_filestream, TCIOFLUSH);
         
 	    count = write(uart0_filestream, &tx_buffer, 9);
 	    if (count < 0)
@@ -419,6 +449,9 @@ int UsbMX::moveRW(unsigned char ID, int Position)
     tx_buffer[6] = Position_L;
     tx_buffer[7] = Position_H;
     tx_buffer[8] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 9);
 	if (count < 0)
@@ -458,6 +491,9 @@ int UsbMX::moveSpeedRW(unsigned char ID, int Position, int Speed)
     tx_buffer[9] = Speed_H;
     tx_buffer[10] = Checksum;
     
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
+    
 	count = write(uart0_filestream, &tx_buffer, 11);
 	if (count < 0)
 	{
@@ -480,6 +516,9 @@ void UsbMX::action()
     tx_buffer[3] = MX_ACTION_LENGTH;
     tx_buffer[4] = MX_ACTION;
     tx_buffer[5] = MX_ACTION_CHECKSUM;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 6);
 	if (count < 0)
@@ -505,6 +544,9 @@ int UsbMX::torqueStatus( unsigned char ID, bool Status)
     tx_buffer[5] = MX_TORQUE_ENABLE;
     tx_buffer[6] = Status;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -533,6 +575,9 @@ int UsbMX::ledStatus( unsigned char ID, bool Status)
     tx_buffer[6] = Status;
     tx_buffer[7] = Checksum;
     
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
+    
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
 	{
@@ -559,6 +604,9 @@ int UsbMX::setTempLimit(unsigned char ID, unsigned char Temperature)
     tx_buffer[5] = MX_LIMIT_TEMPERATURE;
     tx_buffer[6] = Temperature;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -587,6 +635,9 @@ int UsbMX::setVoltageLimit(unsigned char ID, unsigned char DVoltage, unsigned ch
     tx_buffer[6] = DVoltage;
 	tx_buffer[7] = UVoltage;
     tx_buffer[8] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 9);
 	if (count < 0)
@@ -625,6 +676,9 @@ int UsbMX::setAngleLimit(unsigned char ID, int CWLimit, int CCWLimit)
     tx_buffer[10] = CCW_H;
     tx_buffer[11] = Checksum;
     
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
+    
 	count = write(uart0_filestream, &tx_buffer, 12);
 	if (count < 0)
 	{
@@ -657,6 +711,9 @@ int UsbMX::setMaxTorque(unsigned char ID, int MaxTorque)
     tx_buffer[7] = MaxTorque_H;
     tx_buffer[8] = Checksum;
     
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
+    
 	count = write(uart0_filestream, &tx_buffer, 9);
 	if (count < 0)
 	{
@@ -683,6 +740,9 @@ int UsbMX::setSRL(unsigned char ID, unsigned char SRL)
     tx_buffer[5] = MX_RETURN_LEVEL;
     tx_buffer[6] = SRL;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -711,6 +771,9 @@ int UsbMX::setRDT(unsigned char ID, unsigned char RDT)
     tx_buffer[6] = RDT/2;
     tx_buffer[7] = Checksum;
     
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
+    
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
 	{
@@ -738,6 +801,9 @@ int UsbMX::setLEDAlarm(unsigned char ID, unsigned char LEDAlarm)
     tx_buffer[6] = LEDAlarm;
     tx_buffer[7] = Checksum;
     
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
+    
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
 	{
@@ -764,6 +830,9 @@ int UsbMX::setShutdownAlarm(unsigned char ID, unsigned char SALARM)
     tx_buffer[5] = MX_ALARM_SHUTDOWN;
     tx_buffer[6] = SALARM;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -794,6 +863,9 @@ int UsbMX::setCMargin(unsigned char ID, unsigned char CWCMargin, unsigned char C
     tx_buffer[8] = CCWCMargin;
     tx_buffer[9] = Checksum;
     
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
+    
 	count = write(uart0_filestream, &tx_buffer, 10);
 	if (count < 0)
 	{
@@ -822,6 +894,9 @@ int UsbMX::setCSlope(unsigned char ID, unsigned char CWCSlope, unsigned char CCW
     tx_buffer[7] = MX_CCW_COMPLIANCE_SLOPE;
     tx_buffer[8] = CCWCSlope;
     tx_buffer[9] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 10);
 	if (count < 0)
@@ -856,6 +931,9 @@ int UsbMX::setPunch(unsigned char ID, int Punch)
     tx_buffer[7] = Punch_H;
     tx_buffer[8] = Checksum;
     
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
+    
 	count = write(uart0_filestream, &tx_buffer, 9);
 	if (count < 0)
 	{
@@ -871,7 +949,7 @@ int UsbMX::setPunch(unsigned char ID, int Punch)
 int UsbMX::moving(unsigned char ID)
 {
 
-    Checksum = (~(ID + MX_MOVING_LENGTH  + MX_READ_DATA + MX_MOVING + MX_BYTE_READ))&0xFF;
+    Checksum = (~(ID + MX_MOVING_LENGTH  + MX_READ_DATA + MX_MOVING + READ_ONE_BYTE_LENGTH))&0xFF;
     
 	
     tx_buffer[0] = MX_START;
@@ -880,8 +958,11 @@ int UsbMX::moving(unsigned char ID)
     tx_buffer[3] = MX_MOVING_LENGTH;
     tx_buffer[4] = MX_READ_DATA;
     tx_buffer[5] = MX_MOVING;
-    tx_buffer[6] = MX_BYTE_READ;
+    tx_buffer[6] = READ_ONE_BYTE_LENGTH;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -894,12 +975,14 @@ int UsbMX::moving(unsigned char ID)
 
 	Moving_Byte = -1;
 	Time_Counter = 0;
+	
 	while((bytesToRead() < 7) & (Time_Counter < TIME_OUT))
 	{
 	    Time_Counter++;
 	    usleep(1000);
 	}
 	
+
 	Read_Byte = 0;
 	Read_Byte = read(uart0_filestream, &rx_buffer, bytesToRead() );
 #if 0
@@ -949,6 +1032,9 @@ int UsbMX::lockRegister(unsigned char ID)
     tx_buffer[6] = LOCK;
     tx_buffer[7] = Checksum;
     
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
+    
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
 	{
@@ -964,7 +1050,7 @@ int UsbMX::lockRegister(unsigned char ID)
 int UsbMX::RWStatus(unsigned char ID)
 {
 
-    Checksum = (~(ID + MX_RWS_LENGTH  + MX_READ_DATA + MX_REGISTERED_INSTRUCTION + MX_BYTE_READ))&0xFF;
+    Checksum = (~(ID + MX_RWS_LENGTH  + MX_READ_DATA + MX_REGISTERED_INSTRUCTION + READ_ONE_BYTE_LENGTH))&0xFF;
     
 	
     tx_buffer[0] = MX_START;
@@ -973,8 +1059,11 @@ int UsbMX::RWStatus(unsigned char ID)
     tx_buffer[3] = MX_RWS_LENGTH;
     tx_buffer[4] = MX_READ_DATA;
     tx_buffer[5] = MX_REGISTERED_INSTRUCTION;
-    tx_buffer[6] = MX_BYTE_READ;
+    tx_buffer[6] = READ_ONE_BYTE_LENGTH;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -1033,7 +1122,7 @@ int UsbMX::readTemperature(unsigned char ID)
     memset(tx_buffer, 0, sizeof(tx_buffer) );
     memset(tx_buffer, 0, sizeof(rx_buffer) );
    
-    Checksum = (~(ID + MX_TEM_LENGTH  + MX_READ_DATA + MX_PRESENT_TEMPERATURE + MX_BYTE_READ))&0xFF;
+    Checksum = (~(ID + MX_TEM_LENGTH  + MX_READ_DATA + MX_PRESENT_TEMPERATURE + READ_ONE_BYTE_LENGTH))&0xFF;
     
 	
     tx_buffer[0] = MX_START;
@@ -1042,8 +1131,11 @@ int UsbMX::readTemperature(unsigned char ID)
     tx_buffer[3] = MX_TEM_LENGTH;
     tx_buffer[4] = MX_READ_DATA;
     tx_buffer[5] = MX_PRESENT_TEMPERATURE;
-    tx_buffer[6] = MX_BYTE_READ;
+    tx_buffer[6] = READ_ONE_BYTE_LENGTH;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -1103,7 +1195,7 @@ int UsbMX::readVoltage(unsigned char ID)
     memset(tx_buffer, 0, sizeof(tx_buffer) );
     memset(tx_buffer, 0, sizeof(rx_buffer) );
    
-    Checksum = (~(ID + MX_VOLT_LENGTH  + MX_READ_DATA + MX_PRESENT_VOLTAGE + MX_BYTE_READ))&0xFF;
+    Checksum = (~(ID + MX_VOLT_LENGTH  + MX_READ_DATA + MX_PRESENT_VOLTAGE + READ_ONE_BYTE_LENGTH))&0xFF;
     
 	
     tx_buffer[0] = MX_START;
@@ -1112,8 +1204,11 @@ int UsbMX::readVoltage(unsigned char ID)
     tx_buffer[3] = MX_VOLT_LENGTH;
     tx_buffer[4] = MX_READ_DATA;
     tx_buffer[5] = MX_PRESENT_VOLTAGE;
-    tx_buffer[6] = MX_BYTE_READ;
+    tx_buffer[6] = READ_ONE_BYTE_LENGTH;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -1173,7 +1268,7 @@ int UsbMX::readPosition(unsigned char ID)
     memset(tx_buffer, 0, sizeof(tx_buffer) );
     memset(tx_buffer, 0, sizeof(rx_buffer) );
    
-    Checksum = (~(ID + MX_POS_LENGTH  + MX_READ_DATA + MX_PRESENT_POSITION_L + MX_BYTE_READ_POS))&0xFF;
+    Checksum = (~(ID + MX_POS_LENGTH  + MX_READ_DATA + MX_PRESENT_POSITION_L + READ_TWO_BYTE_LENGTH))&0xFF;
     
 	
     tx_buffer[0] = MX_START;
@@ -1182,8 +1277,11 @@ int UsbMX::readPosition(unsigned char ID)
     tx_buffer[3] = MX_POS_LENGTH;
     tx_buffer[4] = MX_READ_DATA;
     tx_buffer[5] = MX_PRESENT_POSITION_L;
-    tx_buffer[6] = MX_BYTE_READ_POS;
+    tx_buffer[6] = READ_TWO_BYTE_LENGTH;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -1197,14 +1295,17 @@ int UsbMX::readPosition(unsigned char ID)
     
 	Position_Byte = -1;
 	Time_Counter = 0;
+	
 	while((bytesToRead() < 7) & (Time_Counter < TIME_OUT))
 	{
 	    Time_Counter++;
 	    usleep(1000);
 	}
 	
+	
 	Read_Byte = 0;
 	Read_Byte = read(uart0_filestream, &rx_buffer, bytesToRead() );
+	
 #if 0
     printf("STUFF(%d): ", ret);
     for(int i = 0; i < ret; i++)
@@ -1224,7 +1325,7 @@ int UsbMX::readPosition(unsigned char ID)
             {
                 if( (Error_Byte = rx_buffer[iter+4]) != 0 )
                 {
-                    printf("ERROR!\n");
+                    //printf("ERROR: ");
                     return (Error_Byte * (-1));
                 }
                     
@@ -1243,17 +1344,20 @@ int UsbMX::readSpeed(unsigned char ID)
     memset(tx_buffer, 0, sizeof(tx_buffer) );
     memset(tx_buffer, 0, sizeof(rx_buffer) );
    
-    Checksum = (~(ID + MX_POS_LENGTH  + MX_READ_DATA + MX_PRESENT_SPEED_L + MX_BYTE_READ_POS))&0xFF;
+    Checksum = (~(ID + MX_POS_LENGTH  + MX_READ_DATA + MX_PRESENT_SPEED_L + READ_TWO_BYTE_LENGTH))&0xFF;
     
 	
     tx_buffer[0] = MX_START;
     tx_buffer[1] = MX_START;
     tx_buffer[2] = ID;
-    tx_buffer[3] = MX_POS_LENGTH;
+    tx_buffer[3] = MX_SPEED_LENGTH;
     tx_buffer[4] = MX_READ_DATA;
     tx_buffer[5] = MX_PRESENT_SPEED_L;
-    tx_buffer[6] = MX_BYTE_READ_POS;
+    tx_buffer[6] = READ_TWO_BYTE_LENGTH;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)
@@ -1313,17 +1417,20 @@ int UsbMX::readLoad(unsigned char ID)
     memset(tx_buffer, 0, sizeof(tx_buffer) );
     memset(tx_buffer, 0, sizeof(rx_buffer) );
    
-    Checksum = (~(ID + MX_POS_LENGTH  + MX_READ_DATA + MX_PRESENT_LOAD_L + MX_BYTE_READ_POS))&0xFF;
+    Checksum = (~(ID + MX_POS_LENGTH  + MX_READ_DATA + MX_PRESENT_LOAD_L + READ_TWO_BYTE_LENGTH))&0xFF;
     
 	
     tx_buffer[0] = MX_START;
     tx_buffer[1] = MX_START;
     tx_buffer[2] = ID;
-    tx_buffer[3] = MX_POS_LENGTH;
+    tx_buffer[3] = MX_LOAD_LENGTH;
     tx_buffer[4] = MX_READ_DATA;
     tx_buffer[5] = MX_PRESENT_LOAD_L;
-    tx_buffer[6] = MX_BYTE_READ_POS;
+    tx_buffer[6] = READ_TWO_BYTE_LENGTH;
     tx_buffer[7] = Checksum;
+    
+    usleep(10000);
+	tcflush(uart0_filestream, TCIOFLUSH);
     
 	count = write(uart0_filestream, &tx_buffer, 8);
 	if (count < 0)

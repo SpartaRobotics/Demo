@@ -97,6 +97,8 @@ ORGANIZATION: Sparta Robotics
 #define LEFT						0
 #define RIGHT                       1
 #define MX_BYTE_READ                1
+#define READ_ONE_BYTE_LENGTH		1
+#define READ_TWO_BYTE_LENGTH		2
 #define MX_BYTE_READ_POS            2
 #define MX_RESET_LENGTH				2
 #define MX_ACTION_LENGTH			2
@@ -119,6 +121,7 @@ ORGANIZATION: Sparta Robotics
 #define MX_LED_LENGTH               4
 #define MX_TORQUE_LENGTH            4
 #define MX_POS_LENGTH               4
+#define MX_LOAD_LENGTH              4
 #define MX_MT_LENGTH                5
 #define MX_PUNCH_LENGTH             5
 #define MX_SPEED_LENGTH             5
@@ -142,6 +145,10 @@ ORGANIZATION: Sparta Robotics
 #define HALF_SPEED					512
 #define QUARTER_SPEED				256
 #define STOP						0
+
+#define MULTI						2
+#define MX_MULTI_AL_L				255
+#define MX_MULTI_AL_H				47
 
 #include <iostream>
 #include <stdio.h>
@@ -196,6 +203,7 @@ public:
     
     int move(unsigned char ID, int Position);
 	int moveSpeed(unsigned char ID, int Position, int Speed);
+	int multiTurn(unsigned char ID, int Position);
 	int moveDeg(unsigned char ID, int Degrees);
 	int moveSpeedDeg(unsigned char ID, int Degrees, int Speed);
 	int setEndless(unsigned char ID,bool Status);

@@ -100,7 +100,7 @@ int PCA9685::writeByte(int writeRegister, int writeValue)
     // printf("Wrote: 0x%02X to register 0x%02X \n",writeValue, writeRegister) ;
     int toReturn = i2c_smbus_write_byte_data(kI2CFileDescriptor, writeRegister, writeValue);
     if (toReturn < 0) {
-        printf("PCA9685 Write Byte error: %d",errno) ;
+        //printf("PCA9685 Write Byte error: %d",errno) ;
         error = errno ;
         toReturn = -1 ;
     }
